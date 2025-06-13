@@ -4,6 +4,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Generated files (rebuilt on each deploy)
+public/
+
 # Runtime data
 pids
 *.pid

@@ -145,9 +145,11 @@ Available variables in templates:
 ```
 vignes-vibe-blog/
 ├── posts/                 # Your blog posts (.md files)
+├── assets/                # Source files for static assets
+│   └── css/              # Source CSS files
 ├── templates/             # HTML templates (optional)
-├── public/                # Generated static files
-│   ├── css/              # Stylesheets
+├── public/                # Generated static files (auto-generated)
+│   ├── css/              # Generated stylesheets
 │   ├── posts/            # Generated post HTML files
 │   ├── index.html        # Homepage
 │   └── archive.html      # Archive page
