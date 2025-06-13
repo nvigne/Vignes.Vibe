@@ -1,0 +1,22 @@
+{
+  "name": "vignes-vibe-blog",
+  "version": "1.0.0",
+  "description": "A static blog generator for Vignes.Vibe",
+  "main": "build.js",
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "npm run build && npm run serve",
+    "serve": "npx http-server public -p 3000 -o",
+    "watch": "node watch.js"
+  },
+  "dependencies": {
+    "marked": "^12.0.0",
+    "front-matter": "^4.0.2",
+    "chokidar": "^3.6.0",
+    "http-server": "^14.1.1"
+  },
+  "keywords": ["blog", "static", "generator"],
+  "author": "Vignes",
+  "license": "MIT"
+}
