@@ -9,6 +9,8 @@ class BlogGenerator {
     this.templatesDir = './templates';
     this.publicDir = './public';
     this.posts = [];
+    // Set base path for GitHub Pages deployment
+    this.basePath = process.env.NODE_ENV === 'production' ? '/Vignes.Vibe' : '';
   }
 
   async build() {
@@ -80,7 +82,6 @@ class BlogGenerator {
       return this.getDefaultTemplate(templateName);
     }
   }
-
   getDefaultTemplate(templateName) {
     if (templateName === 'post.html') {
       return `<!DOCTYPE html>
@@ -89,15 +90,15 @@ class BlogGenerator {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}} - Vignes.Vibe</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="{{basePath}}/css/style.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="../index.html" class="logo">Vignes.Vibe</a>
+            <a href="{{basePath}}/index.html" class="logo">Vignes.Vibe</a>
             <div class="nav-links">
-                <a href="../index.html">Home</a>
-                <a href="../archive.html">Archive</a>
+                <a href="{{basePath}}/index.html">Home</a>
+                <a href="{{basePath}}/archive.html">Archive</a>
             </div>
         </nav>
     </header>
@@ -164,7 +165,6 @@ class BlogGenerator {
       day: 'numeric'
     });
   }
-
   async generatePostPages() {
     const template = await this.loadTemplate('post.html');
     
@@ -174,24 +174,24 @@ class BlogGenerator {
         date: post.frontMatter.date,
         formattedDate: this.formatDate(post.frontMatter.date),
         tags: post.frontMatter.tags || [],
-        content: post.content
+        content: post.content,
+        basePath: this.basePath
       });
       
       await fs.writeFile(path.join(this.publicDir, 'posts', `${post.slug}.html`), html);
     }
   }
-
   async generateIndexPage() {
     const recentPosts = this.posts.slice(0, 5);
     const postsHtml = recentPosts.map(post => `
       <article class="post-preview">
-        <h2><a href="posts/${post.slug}.html">${post.frontMatter.title || 'Untitled'}</a></h2>
+        <h2><a href="${this.basePath}/posts/${post.slug}.html">${post.frontMatter.title || 'Untitled'}</a></h2>
         <div class="post-meta">
           <time datetime="${post.frontMatter.date}">${this.formatDate(post.frontMatter.date)}</time>
           ${(post.frontMatter.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('')}
         </div>
         <p class="excerpt">${post.excerpt}</p>
-        <a href="posts/${post.slug}.html" class="read-more">Read more →</a>
+        <a href="${this.basePath}/posts/${post.slug}.html" class="read-more">Read more →</a>
       </article>
     `).join('');
 
@@ -201,15 +201,15 @@ class BlogGenerator {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vignes.Vibe - Personal Blog</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="${this.basePath}/css/style.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">Vignes.Vibe</a>
+            <a href="${this.basePath}/index.html" class="logo">Vignes.Vibe</a>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="archive.html">Archive</a>
+                <a href="${this.basePath}/index.html">Home</a>
+                <a href="${this.basePath}/archive.html">Archive</a>
             </div>
         </nav>
     </header>
@@ -231,11 +231,10 @@ class BlogGenerator {
 
     await fs.writeFile(path.join(this.publicDir, 'index.html'), html);
   }
-
   async generateArchivePage() {
     const postsHtml = this.posts.map(post => `
       <article class="archive-post">
-        <h3><a href="posts/${post.slug}.html">${post.frontMatter.title || 'Untitled'}</a></h3>
+        <h3><a href="${this.basePath}/posts/${post.slug}.html">${post.frontMatter.title || 'Untitled'}</a></h3>
         <div class="post-meta">
           <time datetime="${post.frontMatter.date}">${this.formatDate(post.frontMatter.date)}</time>
           ${(post.frontMatter.tags || []).map(tag => `<span class="tag">${tag}</span>`).join('')}
@@ -250,15 +249,15 @@ class BlogGenerator {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive - Vignes.Vibe</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="${this.basePath}/css/style.css">
 </head>
 <body>
     <header>
         <nav>
-            <a href="index.html" class="logo">Vignes.Vibe</a>
+            <a href="${this.basePath}/index.html" class="logo">Vignes.Vibe</a>
             <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="archive.html">Archive</a>
+                <a href="${this.basePath}/index.html">Home</a>
+                <a href="${this.basePath}/archive.html">Archive</a>
             </div>
         </nav>
     </header>
